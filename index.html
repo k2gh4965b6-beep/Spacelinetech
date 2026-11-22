@@ -211,7 +211,9 @@ function itemList(s){
 function renderOrderView(){
   const V=$('orderView');let d=null;
   try{const h=location.hash.slice(3);if(/^[0-9a-f]+$/.test(h)&&h.length<6000)d=JSON.parse(fromHex(h))}catch(e){d=null}
-  if(!d||!d.n){V.innerHTML='<h1>We couldn\'t open that tracking link</h1><p>Check the link in your email, or look up your order below.</p>';return}
+  if(!d||!d.n){V.innerHTML=`<h1>Track your order</h1><p style="font-size:17px">Open the "Track your order" button in any email from us to see your order here. No email handy? Enter your order number and we'll email you the latest status.</p>
+  <form id="lk" class="ocard"><div class="two"><div><label for="lkN">Order number</label><input id="lkN" placeholder="ST-123456" required></div><div><label for="lkE">Email you ordered with</label><input id="lkE" type="email" required></div></div><button class="btn full">Email me my status</button><p class="note" id="lkM" style="margin:10px 0 0"></p></form>`;
+  $('lk').addEventListener('submit',e=>{e.preventDefault();const n=$('lkN').value.trim().toUpperCase(),em=$('lkE').value.trim();location.href=`mailto:${INBOX}?subject=${encodeURIComponent('Status request '+n)}&body=${encodeURIComponent('Order: '+n+'\nEmail: '+em)}`;$('lkM').textContent=`Your mail app should open with the request ready to send. If it doesn't, email ${INBOX} with the subject "Status request ${n}". We reply within the hour.`});return}
   const S=SL(d.s),pick=d.d==='Store pickup'||d.s==='pickup',T=stepsFor(d.s,pick),items=itemList(d.i);
   const note={delayed:'Your order is running late. We\'ll email you as soon as it moves.',cancelled:'This order was cancelled. You have not been charged.',refunded:'Your refund has been issued. It can take 5 to 10 business days to appear.'}[d.s];
   V.innerHTML=`<p class="note" style="margin:0">Order ${esc(d.n)}</p><h1>${esc(d.f?d.f+', y':'Y')}our order ${({new:'has been received',confirmed:'is confirmed',processing:'is being prepared',shipped:'has shipped',out:'is out for delivery',delivered:'was delivered',pickup:'is ready for pickup',delayed:'is delayed',cancelled:'was cancelled',refunded:'was refunded'})[d.s]||'is '+esc(S.l.toLowerCase())}</h1>
