@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track your order · Spaceline Tech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday retail: a clean, confident electronics store
+   IDEA a showroom counter: devices laid on stone, price tags in brick red
+   PICTURE the hero is a lineup of the six drawn devices on a stone counter; every card shows its device
+   COLOUR stone ground, black ink, white panels, brick accent for prices and buttons
+   TYPE Schibsted Grotesk throughout, heavy for headings
+   LAYOUT nav, hero band with lineup, product grid, checkout drawer, footer; #admin shows the owner's order desk */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121110);--stone:light-dark(#e7e4df,#1d1b19);--ink:light-dark(#141210,#f3f0ec);--soft:light-dark(#5f5a54,#b2aba3);--line:light-dark(#dcd7d0,#34302c);--panel:light-dark(#ffffff,#1a1817);--brick:#c8371e;--brickh:#a82c16;--ok:light-dark(#1f7a44,#5fcf8b)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Schibsted Grotesk",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{line-height:1.05;letter-spacing:-.02em;margin:0;text-wrap:balance;font-weight:800}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--brick);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+nav{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:10px max(5vw,16px)}
+nav .wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:21px;color:var(--ink);text-decoration:none;margin-right:auto;display:flex;gap:8px;align-items:center}
+.logo i{width:20px;height:20px;background:var(--brick);border-radius:5px;display:inline-block}
+nav a.l{color:var(--ink);text-decoration:none;font-weight:600;padding:8px 2px}
+.btn{background:var(--brick);color:#fff;border:0;border-radius:12px;padding:10px 18px;min-height:44px;font-weight:700}
+.btn:hover{background:var(--brickh)}
+.btn:disabled{opacity:.45;cursor:default}
+.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:8px 16px;min-height:44px;font-weight:700}
+.cartbtn{display:flex;gap:8px;align-items:center}
+.cartbtn b{background:#fff;color:var(--brick);border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-size:13px}
+.hero{background:var(--stone)}
+.hero .top{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.hero h1{font-size:clamp(34px,5.5vw,52px);max-width:15ch}
+.hero p{font-size:18px;color:var(--soft);max-width:44ch;margin:12px 0 0}
+.perks{display:flex;gap:8px;flex-wrap:wrap}
+.perks span{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:600;font-size:15px;white-space:nowrap}
+.lineup{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;align-items:end;margin-top:30px;padding-bottom:14px;border-bottom:10px solid light-dark(#cfcac2,#2a2724)}
+.lineup svg{width:100%;height:auto;max-height:190px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
+.tools h2{font-size:clamp(28px,4vw,38px);margin-right:auto}
+.chip{border:2px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:8px 16px;min-height:44px;font-weight:600}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.card .pic{background:var(--stone);height:210px;display:grid;place-items:center;padding:18px}
+.card .pic svg{height:170px;width:auto;max-width:100%}
+.card .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font-size:21px}
+.card p{margin:0;color:var(--soft);font-size:15px}
+.specs{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.specs span{font-size:13px;background:var(--stone);border-radius:8px;padding:3px 8px}
+.badge{font-size:13px;font-weight:700;color:var(--brick)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:10px}
+.price{font-weight:800;font-size:21px;white-space:nowrap}
+.added{background:var(--ink);color:var(--bg)}
+.why{background:var(--ink);color:var(--bg)}
+.why .wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.why h3{font-size:18px;margin-bottom:6px}
+.why p{margin:0;opacity:.8;font-size:15px}
+footer{background:var(--stone)}
+footer .wrap{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:24px}
+footer h3{font-size:17px;margin-bottom:6px}
+footer p{margin:0 0 4px;color:var(--soft)}
+footer small{grid-column:1/-1;color:var(--soft)}
+.scrim{position:fixed;inset:0;background:rgba(10,8,6,.5);opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(440px,100%);background:var(--bg);z-index:31;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column}
+.open .scrim{opacity:1;pointer-events:auto}.open .drawer{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.dh h2{font-size:24px}
+.x{border:0;background:none;color:var(--ink);font-size:28px;width:44px;height:44px}
+.dbody{flex:1;overflow:auto;padding:8px 20px 20px}
+.it{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.it svg{width:52px;height:52px}
+.it b{display:block}
+.qty{display:flex;align-items:center;gap:4px}
+.qty button{width:36px;height:36px;border-radius:10px;border:2px solid var(--line);background:var(--panel);color:var(--ink);font-weight:700}
+.qty span{min-width:22px;text-align:center;font-variant-numeric:tabular-nums}
+.tot div{display:flex;justify-content:space-between;padding:3px 0}
+.tot .big{font-weight:800;font-size:20px;padding-top:8px}
+.note{font-size:14px;color:var(--soft)}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+input,select,textarea{width:100%;font:inherit;font-size:16px;min-height:44px;border:2px solid var(--line);border-radius:12px;padding:8px 12px;background:var(--panel);color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.full{width:100%;margin-top:16px;min-height:52px;font-size:17px}
+.okbox{background:var(--stone);border-radius:14px;padding:16px;margin:12px 0}
+.okbox code{font-weight:800;font-size:20px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.desk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;align-items:start}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
+.pane h2{font-size:24px;margin-bottom:4px}
+.statuses{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.st{border:2px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:10px;min-height:48px;font-weight:700;text-align:left}
+.st[aria-pressed=true]{border-color:var(--brick);background:color-mix(in srgb,var(--brick) 10%,var(--panel))}
+.preview{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:12px;background:#fff;color:#141210}
+.log{list-style:none;padding:0;margin:10px 0 0}
+.log li{border-top:1px solid var(--line);padding:10px 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.log b{white-space:nowrap}
+.msg{font-weight:600;margin-top:10px}
+.msg.err{color:var(--brick)}.msg.good{color:var(--ok)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(9em,1fr));gap:12px;margin-bottom:18px}
+.stat{background:var(--stone);border-radius:14px;padding:14px 16px}
+.stat b{display:block;font-size:clamp(24px,3vw,32px);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat span{font-size:14px;color:var(--soft)}
+.abar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.abar input{flex:1 1 220px;width:auto}.abar select{width:auto;flex:0 1 200px}
+.chk{display:flex;gap:8px;align-items:center;font-weight:500;margin:6px 0}
+.chk input{width:20px;min-height:20px;height:20px}
+.olist{display:flex;flex-direction:column}
+.orow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:12px 8px;color:var(--ink);border-radius:10px}
+.orow:hover{background:var(--stone)}
+.orow[aria-current=true]{background:color-mix(in srgb,var(--brick) 9%,var(--panel))}
+.orow b{white-space:nowrap}.orow small{color:var(--soft);font-size:13px}
+.pill{display:inline-block;font-size:13px;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap;background:var(--stone);color:var(--ink)}
+.p-new{background:#c8371e;color:#fff}.p-confirmed,.p-processing{background:#f2c94c;color:#141210}.p-shipped,.p-out,.p-pickup{background:#5fa8ff;color:#08203a}.p-delivered{background:#2fb36a;color:#06210f}.p-delayed{background:#ff9a3d;color:#2a1200}.p-cancelled,.p-refunded{background:#9a958e;color:#fff}
+.hist{list-style:none;padding:0;margin:8px 0 0;font-size:14px}
+.hist li{border-left:3px solid var(--line);padding:4px 0 4px 10px}
+.danger{color:var(--brick);border-color:color-mix(in srgb,var(--brick) 40%,var(--line))}
+.empty{padding:30px 8px;color:var(--soft);text-align:center}
+.view{display:none}
+body.v-admin #admin,body.v-policies #policies{display:block}
+body.v-admin #store,body.v-policies #store,body.v-order #store{display:none}
+body.v-order #order{display:block}
+.ov{max-width:760px;margin:0 auto}
+.ov h1{font-size:clamp(30px,5vw,44px);margin:6px 0 10px}
+.otrack{display:grid;gap:6px;margin:24px 0 8px}
+.otrack .bar{height:6px;border-radius:3px;background:var(--line)}
+.otrack .on .bar{background:var(--brick)}
+.otrack span{display:block;font-size:13px;margin-top:8px;color:var(--soft)}
+.otrack .on span{color:var(--ink)}.otrack .cur span{font-weight:800}
+.ocard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:20px}
+.ocard .r{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.ocard .r:first-of-type{border-top:0}
+.ocard .r b{white-space:nowrap}
+.card.out .pic{opacity:.5}
+.stock{font-size:13px;font-weight:700;color:var(--brick)}
+.trackband{background:var(--stone)}
+.trackband .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:start}
+.trackband h2{font-size:clamp(28px,4vw,38px)}
+.trackres{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
+.inline{display:flex;gap:8px;align-items:stretch}
+.inline input{flex:1}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:2px solid var(--line)}
+.tab{background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;padding:10px 14px;font-weight:700;color:var(--soft);min-height:44px}
+.tab[aria-selected=true]{color:var(--ink);border-color:var(--brick)}
+.tpanel[hidden]{display:none}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl th{font-size:14px;color:var(--soft);font-weight:600}
+.tbl td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tbl input{max-width:130px}
+.policy{max-width:760px}
+.policy h1{font-size:clamp(32px,5vw,48px);margin-bottom:8px}
+.policy h2{font-size:24px;margin:30px 0 8px}
+.policy p,.policy li{font-size:17px}
+.plinks{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.plinks a{color:var(--ink);font-weight:700;background:var(--stone);border-radius:999px;padding:8px 14px;text-decoration:none}
+footer a{color:var(--ink)}
+@media(max-width:900px){.desk{grid-template-columns:1fr}.why .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}.trackband .wrap{grid-template-columns:1fr}}
+@media(max-width:700px){.lineup{grid-template-columns:repeat(3,minmax(0,1fr))}.lineup svg{max-height:120px}footer .wrap{grid-template-columns:1fr}nav a.l{display:none}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.card .pic{height:160px}.card .pic svg{height:120px}.card h3{font-size:18px}.card .body{padding:12px}.row{flex-wrap:wrap}.row .btn{width:100%}.specs{display:none}.why .wrap{grid-template-columns:1fr}.two{grid-template-columns:1fr}.tbl input{max-width:90px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+body{background:var(--bg)}
+.ovwrap{padding:clamp(28px,4vw,56px) max(5vw,16px)}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><span class="logo"><i></i>Spaceline Tech</span><span class="note">Order tracking</span></div></nav>
+<main class="ovwrap"><div class="ov" id="orderView"></div></main>
+<footer class="band"><div class="wrap" style="display:block"><p>Spaceline Tech · spacelinetech@agentmail.to · (984) 204-1195</p><small>© 2026 Spaceline Tech</small></div></footer>
+<script>
+{
+const INBOX='spacelinetech@agentmail.to',$=id=>document.getElementById(id);
+const money=n=>'$'+n.toFixed(2);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const P=[
+ {id:'one',name:'Spaceline One',cat:'Phones',art:'phone',price:699,desc:'6.4-inch OLED phone with an all-day battery.',specs:['128 GB','5G','Dual camera'],badge:'Best seller'},
+ {id:'pods',name:'Pod Air',cat:'Audio',art:'buds',price:129,desc:'Wireless earbuds with noise cancelling.',specs:['30 h battery','USB-C','Water resistant']},
+ {id:'slate',name:'Slate 11',cat:'Tablets',art:'tablet',price:449,desc:'11-inch tablet for reading, drawing and streaming.',specs:['256 GB','Wi-Fi 6','Stylus ready']},
+ {id:'pulse',name:'Pulse Watch',cat:'Wearables',art:'watch',price:249,desc:'Heart rate, sleep and GPS on your wrist.',specs:['7-day battery','GPS','Swim proof'],badge:'New'},
+ {id:'boom',name:'Boom Mini',cat:'Audio',art:'speaker',price:79,desc:'Pocket speaker with surprisingly big sound.',specs:['12 h battery','Bluetooth 5.3']},
+ {id:'volt',name:'Volt 20K',cat:'Accessories',art:'bank',price:49,desc:'20,000 mAh power bank, charges two devices.',specs:['65 W','2 × USB-C']}
+];
+const ST=[
+ {k:'new',l:'New',s:'',m:''},
+ {k:'confirmed',l:'Order confirmed',s:'Your order {num} is confirmed',m:'Thanks for shopping with us. We\'ve received your order and are getting it ready.'},
+ {k:'processing',l:'Processing',s:'We\'re preparing order {num}',m:'Your items are being picked and packed at our warehouse.'},
+ {k:'shipped',l:'Shipped',s:'Your order {num} has shipped',m:'Good news: your order is on its way.'},
+ {k:'out',l:'Out for delivery',s:'Order {num} is out for delivery',m:'Your package is on the delivery vehicle and should arrive today. Please have your payment ready.'},
+ {k:'delivered',l:'Delivered',s:'Order {num} was delivered',m:'Your order has been delivered. We hope you love it. Reply to this email if anything is wrong.'},
+ {k:'pickup',l:'Ready for pickup',s:'Order {num} is ready for pickup',m:'Your order is ready at our store. Bring your order number when you collect it.'},
+ {k:'delayed',l:'Delayed',s:'Update on order {num}',m:'Your order is running a little late. We\'re sorry for the wait and will update you as soon as it moves.'},
+ {k:'cancelled',l:'Cancelled',s:'Order {num} has been cancelled',m:'Your order has been cancelled. You have not been charged.'},
+ {k:'refunded',l:'Refunded',s:'Your refund for order {num}',m:'We\'ve issued your refund. It can take 5 to 10 business days to appear.'}
+];
+const SL=k=>ST.find(x=>x.k===k)||ST[0];
+const MSG=k=>SL(k).m;
+const toHex=t=>[...new TextEncoder().encode(t)].map(b=>b.toString(16).padStart(2,'0')).join('');
+const fromHex=h=>new TextDecoder().decode(new Uint8Array((h.match(/[0-9a-f]{2}/g)||[]).map(x=>parseInt(x,16))));
+function stepsFor(k,pick){const steps=pick?['Ordered','Confirmed','Ready for pickup','Picked up']:['Ordered','Confirmed','Shipped','Out for delivery','Delivered'];return{steps,idx:{new:0,confirmed:1,processing:1,shipped:2,out:3,pickup:2,delivered:pick?3:4}[k]}}
+function itemList(s){
+  return String(s||'').split(',').map(x=>x.trim()).filter(Boolean).map(x=>{const m=x.match(/^(\d+)\s*[×x]\s*(.+)$/i);const q=m?+m[1]:1,name=(m?m[2]:x).trim();const p=P.find(y=>y.name.toLowerCase()===name.toLowerCase());return{q,name:p?p.name:name,price:p?p.price*q:null}});
+}
+function renderOrderView(){
+  const V=$('orderView');let d=null;
+  try{const h=location.hash.slice(3);if(/^[0-9a-f]+$/.test(h)&&h.length<6000)d=JSON.parse(fromHex(h))}catch(e){d=null}
+  if(!d||!d.n){V.innerHTML='<h1>We couldn\'t open that tracking link</h1><p>Check the link in your email, or look up your order below.</p>';return}
+  const S=SL(d.s),pick=d.d==='Store pickup'||d.s==='pickup',T=stepsFor(d.s,pick),items=itemList(d.i);
+  const note={delayed:'Your order is running late. We\'ll email you as soon as it moves.',cancelled:'This order was cancelled. You have not been charged.',refunded:'Your refund has been issued. It can take 5 to 10 business days to appear.'}[d.s];
+  V.innerHTML=`<p class="note" style="margin:0">Order ${esc(d.n)}</p><h1>${esc(d.f?d.f+', y':'Y')}our order ${({new:'has been received',confirmed:'is confirmed',processing:'is being prepared',shipped:'has shipped',out:'is out for delivery',delivered:'was delivered',pickup:'is ready for pickup',delayed:'is delayed',cancelled:'was cancelled',refunded:'was refunded'})[d.s]||'is '+esc(S.l.toLowerCase())}</h1>
+  <p style="font-size:17px;margin:0">${esc(MSG(d.s))}</p>
+  ${T.idx===undefined?`<div class="ocard" style="font-weight:700">${esc(note||S.l)}</div>`:`<div class="otrack" style="grid-template-columns:repeat(${T.steps.length},minmax(0,1fr))">${T.steps.map((x,i)=>`<div class="${i<=T.idx?'on':''} ${i===T.idx?'cur':''}"><div class="bar"></div><span>${x}</span></div>`).join('')}</div>`}
+  <div class="ocard"><h2 style="font-size:20px;margin-bottom:6px">Order summary</h2>
+   ${items.map(i=>`<div class="r"><span>${i.q} × ${esc(i.name)}</span><b>${i.price!==null?money(i.price):''}</b></div>`).join('')}
+   ${d.t?`<div class="r"><span><b>Total</b></span><b>${esc(d.t)}</b></div>`:''}</div>
+  <div class="ocard"><h2 style="font-size:20px;margin-bottom:6px">Delivery</h2>
+   <div class="r"><span>Method</span><b>${esc(d.d||'-')}</b></div>
+   ${d.c?`<div class="r"><span>Carrier</span><b>${esc(d.c)}</b></div>`:''}${d.k?`<div class="r"><span>Tracking number</span><b style="white-space:normal;text-align:right">${esc(d.k)}</b></div>`:''}</div>
+  <p class="note" style="margin-top:16px">Status as of ${new Date(d.u).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}. Each update email has a fresh link.</p>
+  <div class="actions"><a class="btn" href="mailto:${INBOX}?subject=${encodeURIComponent('Status request '+d.n)}&body=${encodeURIComponent('Order: '+d.n)}" style="text-decoration:none;display:inline-flex;align-items:center">Email me the latest status</a></div>
+  <p class="note" style="margin-top:20px">Questions? Email ${INBOX} with your order number.</p>`;
+  
+}
+
+renderOrderView();window.addEventListener('hashchange',renderOrderView);
+}
+</script>
+</body>
+</html>
