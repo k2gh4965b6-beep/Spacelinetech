@@ -59,7 +59,7 @@ async function createPayment(body, env) {
   const form = new URLSearchParams();
   form.set("amount", String(q.amount));
   form.set("currency", "usd");
-  form.append("payment_method_types[]", "card");
+  form.set("automatic_payment_methods[enabled]", "true"); form.set("automatic_payment_methods[allow_redirects]", "never");
   form.set("receipt_email", email);
   form.set("description", `Spaceline Tech order ${num}`);
   form.set("metadata[order]", num);
