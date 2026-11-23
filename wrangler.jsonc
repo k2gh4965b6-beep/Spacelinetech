@@ -1,7 +1,8 @@
 {
   // Spaceline Tech shop on Cloudflare Workers
-  "name": "spaceline",
+  "name": "orange-violet-ca22",
   "main": "worker/worker.js",
   "compatibility_date": "2026-11-01",
-  "workers_dev": true
+  "workers_dev": true,
+  "keep_vars": true
 }
